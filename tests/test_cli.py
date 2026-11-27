@@ -46,13 +46,13 @@ class CliTests(unittest.TestCase):
         output = self.root / "reports" / "health.md"
         code, _, _ = self.run_cli("check", self.root.as_posix(), "--format", "markdown", "--output", str(output))
         self.assertEqual(0, code)
-        self.assertIn("# OSS Doctor report", output.read_text())
+        self.assertIn("# OSS Doctor report", output.read_text(encoding="utf-8"))
 
     def test_badge_file(self):
         output = self.root / "badge.svg"
         code, _, _ = self.run_cli("badge", str(self.root), "--output", str(output))
         self.assertEqual(0, code)
-        self.assertIn("<svg", output.read_text())
+        self.assertIn("<svg", output.read_text(encoding="utf-8"))
 
     def test_fix_creates_and_preserves_templates(self):
         custom = self.root / "CONTRIBUTING.md"
@@ -60,7 +60,7 @@ class CliTests(unittest.TestCase):
         created, skipped = scaffold(self.root)
         self.assertEqual(len(TEMPLATES) - 1, len(created))
         self.assertIn(custom.resolve(), skipped)
-        self.assertEqual("my guide", custom.read_text())
+        self.assertEqual("my guide", custom.read_text(encoding="utf-8"))
         self.assertIn("Security Policy", (self.root / "SECURITY.md").read_text())
 
     def test_dry_run_does_not_write(self):
