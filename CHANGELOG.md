@@ -4,12 +4,13 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+
+## [0.1.0] - 2026-11-27
+
 ### Fixed
 
 - Use an Ubuntu runner with Python 3.9 support and explicit UTF-8 in Windows tests.
 - Fall back to ASCII status markers on terminals that cannot encode Unicode.
-
-## [0.1.0] - 2026-11-27
 
 ### Added
 
