@@ -72,6 +72,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         if args.format == "console":
             use_color = not args.no_color and sys.stdout.isatty() and args.output is None
             rendered = console(report, color=use_color)
+            try:
+                rendered.encode(sys.stdout.encoding or "utf-8")
+            except UnicodeEncodeError:
+                rendered = console(report, color=use_color, unicode_output=False)
         else:
             rendered = FORMATTERS[args.format](report)
         if args.output:

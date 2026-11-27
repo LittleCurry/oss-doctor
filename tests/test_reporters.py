@@ -19,6 +19,12 @@ class ReporterTests(unittest.TestCase):
         self.assertIn("40/100", output)
         self.assertIn("Add one.", output)
 
+    def test_console_ascii_fallback(self):
+        output = console(self.report, color=False, unicode_output=False)
+        output.encode("ascii")
+        self.assertIn("[PASS]", output)
+        self.assertIn("-> Add one.", output)
+
     def test_json_is_machine_readable(self):
         parsed = json.loads(json_report(self.report))
         self.assertEqual(40, parsed["score"])

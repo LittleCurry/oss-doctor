@@ -11,26 +11,28 @@ from .models import Report
 ICONS = {"pass": "✅", "warn": "⚠️", "fail": "❌"}
 
 
-def console(report: Report, color: bool = True) -> str:
+def console(report: Report, color: bool = True, unicode_output: bool = True) -> str:
     """Produce a readable report with optional ANSI colors."""
     colors = {"pass": "\033[32m", "warn": "\033[33m", "fail": "\033[31m"}
     reset = "\033[0m"
+    separator = "·" if unicode_output else "-"
     lines = [
-        f"OSS Doctor · {report.path}",
+        f"OSS Doctor {separator} {report.path}",
         f"Score: {report.score}/100 (grade {report.grade})",
         "",
     ]
     for result in report.results:
-        marker = ICONS[result.status]
+        marker = ICONS[result.status] if unicode_output else {"pass": "[PASS]", "warn": "[WARN]", "fail": "[FAIL]"}[result.status]
         if color:
             marker = f"{colors[result.status]}{marker}{reset}"
         lines.append(f"{marker} {result.title}: {result.message}")
         if result.status != "pass":
-            lines.append(f"   → {result.recommendation}")
+            arrow = "→" if unicode_output else "->"
+            lines.append(f"   {arrow} {result.recommendation}")
     counts = report.counts
     lines.extend([
         "",
-        f"{counts['pass']} passed · {counts['warn']} warnings · {counts['fail']} failed",
+        f"{counts['pass']} passed {separator} {counts['warn']} warnings {separator} {counts['fail']} failed",
     ])
     return "\n".join(lines) + "\n"
 
