@@ -65,6 +65,28 @@ class AuditTests(unittest.TestCase):
         result = next(item for item in audit(self.root).results if item.check_id == "metadata")
         self.assertEqual("warn", result.status)
 
+    def test_cargo_package_description_is_detected(self):
+        self.write("Cargo.toml", '[package]\nname = "demo"\n  description = "Useful Rust tools" # comment\n')
+        result = next(item for item in audit(self.root).results if item.check_id == "metadata")
+        self.assertEqual("pass", result.status)
+
+    def test_cargo_literal_description_is_detected(self):
+        self.write("Cargo.toml", "[package]\ndescription = 'Useful Rust tools'\n")
+        result = next(item for item in audit(self.root).results if item.check_id == "metadata")
+        self.assertEqual("pass", result.status)
+
+    def test_cargo_missing_description_warns(self):
+        self.write("Cargo.toml", '[package]\nname = "demo"\n[package.metadata]\ndescription = "not the package description"\n')
+        result = next(item for item in audit(self.root).results if item.check_id == "metadata")
+        self.assertEqual("warn", result.status)
+
+    def test_invalid_cargo_description_does_not_crash(self):
+        for description in ('description = "unterminated', 'description = ""', 'description = 42'):
+            with self.subTest(description=description):
+                self.write("Cargo.toml", "[package]\n" + description + "\n")
+                result = next(item for item in audit(self.root).results if item.check_id == "metadata")
+                self.assertEqual("warn", result.status)
+
     def test_docs_community_files_are_detected(self):
         self.write("docs/CONTRIBUTING.md")
         self.write("docs/SECURITY.md")

@@ -7,7 +7,7 @@ OSS Doctor runs 14 local, read-only checks. It does not use repository popularit
 | README | 10 | A recognized README with at least 300 characters |
 | Quick start | 8 | Installation and usage headings plus a code block |
 | License | 12 | A non-empty license or copying file |
-| Project metadata | 5 | A description in common Python or JavaScript metadata |
+| Project metadata | 5 | A description in common Python, JavaScript, or Rust metadata |
 | Contributing guide | 8 | A guide at the root, in `.github`, or in `docs` |
 | Code of conduct | 5 | A non-empty code of conduct |
 | Security policy | 8 | A non-empty security policy |
@@ -31,7 +31,7 @@ A warning means an improvement is recommended but the area may be intentionally 
 
 ## Scope and limitations
 
-The audit is heuristic. It checks for useful signals, not whether documentation is accurate or tests are effective. Project metadata detection currently understands `pyproject.toml`, `setup.cfg`, and `package.json` descriptions; other manifests still signal project structure.
+The audit is heuristic. It checks for useful signals, not whether documentation is accurate or tests are effective. Project metadata detection understands descriptions in `pyproject.toml`, `setup.cfg`, `package.json`, and simple single-line quoted `description` values in the `[package]` section of `Cargo.toml`. Multiline or workspace-inherited Cargo descriptions are not resolved; other manifests still signal project structure.
 
 The scanner limits individual text reads and avoids following symlinked top-level community files. Always review generated templates before publishing them. Do not put private vulnerability details, secrets, or personal information in reports.
 

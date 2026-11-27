@@ -116,6 +116,24 @@ def metadata(root: Path) -> Result:
         except (ConfigError, UnicodeError):
             # Invalid packaging metadata should not make the entire audit crash.
             description = ""
+    cargo = _entry(root, "Cargo.toml")
+    if cargo and not description:
+        # Recognize simple quoted values in [package], not dependency or
+        # workspace metadata. This is a heuristic, not a full TOML parser.
+        in_package = False
+        for line in _text(cargo).splitlines():
+            line = line.strip()
+            if line.startswith("["):
+                in_package = bool(re.fullmatch(r"\[\s*package\s*\]\s*(?:#.*)?", line))
+            elif in_package:
+                match = re.fullmatch(
+                    r"""description\s*=\s*(?:"((?:[^"\\]|\\.)*)"|'([^']*)')\s*(?:#.*)?""",
+                    line,
+                )
+                if match:
+                    description = (match.group(1) or match.group(2) or "").strip()
+                    if description:
+                        break
     if description:
         return _result("metadata", "Project metadata", 5, "pass", "A package description was found.",
                        "Mirror this clear description in the repository metadata.")
