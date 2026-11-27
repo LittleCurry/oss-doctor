@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oss-doctor"
+version = "0.1.0"
+description = "A zero-dependency health check for open-source repositories"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "LittleCurry"}]
+keywords = ["open-source", "github", "repository", "linter", "community-health"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["coverage>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/LittleCurry/oss-doctor"
+Repository = "https://github.com/LittleCurry/oss-doctor"
+Issues = "https://github.com/LittleCurry/oss-doctor/issues"
+
+[project.scripts]
+oss-doctor = "oss_doctor.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
